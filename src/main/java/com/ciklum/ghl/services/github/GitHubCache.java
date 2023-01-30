@@ -1,5 +1,6 @@
 package com.ciklum.ghl.services.github;
 
+import com.ciklum.ghl.config.GitHubConfiguration;
 import com.ciklum.ghl.dto.RepositoryDto;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.ciklum.ghl.services.github;
+package com.ciklum.ghl.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

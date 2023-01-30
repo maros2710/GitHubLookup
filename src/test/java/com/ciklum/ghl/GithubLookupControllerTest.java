@@ -40,7 +40,7 @@ public class GithubLookupControllerTest {
         when(gitHubService.getRepositories(any())).thenReturn(new ArrayList<>());
         when(githubCache.get(any())).thenReturn(null);
 
-        this.mockMvc.perform(get("/user/user_name")).andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/users/user_name")).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class GithubLookupControllerTest {
                 new HttpClientErrorException(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value())));
         when(githubCache.get(any())).thenReturn(null);
 
-        this.mockMvc.perform(get("/user/non_existing_user")).andDo(print()).andExpect(status().isNotFound());
+        this.mockMvc.perform(get("/users/non_existing_user")).andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class GithubLookupControllerTest {
                 new HttpClientErrorException(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value())));
         when(githubCache.get(any())).thenReturn(null);
 
-        this.mockMvc.perform(get("/user/user_name").header("Accept", "application/xml"))
+        this.mockMvc.perform(get("/users/user_name").header("Accept", "application/xml"))
                     .andDo(print())
                     .andExpect(status().isNotAcceptable());
     }

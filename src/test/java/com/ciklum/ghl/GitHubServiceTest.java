@@ -1,5 +1,6 @@
 package com.ciklum.ghl;
 
+import com.ciklum.ghl.config.GitHubConfiguration;
 import com.ciklum.ghl.services.github.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

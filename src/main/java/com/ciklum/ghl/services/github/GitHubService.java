@@ -1,5 +1,6 @@
 package com.ciklum.ghl.services.github;
 
+import com.ciklum.ghl.config.GitHubConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
