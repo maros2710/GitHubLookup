@@ -2,7 +2,6 @@ package com.ciklum.ghl.services.github;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,8 @@ public class GitHubService {
 
     private final Executor executor;
 
-    public GitHubService(RestTemplateBuilder restTemplateBuilder, GitHubConfiguration configuration, @Qualifier("githubExecutor") Executor executor) {
-        this.restTemplate = restTemplateBuilder.build();
+    public GitHubService(RestTemplate restTemplate, GitHubConfiguration configuration, @Qualifier("githubExecutor") Executor executor) {
+        this.restTemplate = restTemplate;
         this.executor = executor;
         this.restTemplate.setInterceptors(List.of(new AuthorizationInterceptor(configuration.getToken())));
     }
