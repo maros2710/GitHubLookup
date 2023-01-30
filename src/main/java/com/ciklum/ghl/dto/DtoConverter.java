@@ -8,12 +8,15 @@ public class DtoConverter {
         RepositoryDto dto = new RepositoryDto();
         dto.setOwnerLogin(repository.getOwner().getLogin());
         dto.setRepositoryName(repository.getName());
-        dto.setBranches(repository.getBranches().stream().map(it -> {
+        dto.setBranches(repository.getBranches()
+                                  .stream()
+                                  .map(it -> {
             BranchDto branchDto = new BranchDto();
             branchDto.setName(it.getName());
             branchDto.setLastCommitSha(it.getCommit().getSha());
             return branchDto;
-        }).toList());
+        })
+                                  .toList());
         return dto;
     }
 

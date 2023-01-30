@@ -38,7 +38,10 @@ public class GitHubService {
         //Second, we find all users repositories
         List<GitHubRepository> repos = getRepos(gitHubUser);
         //filter out forked
-        repos = repos.stream().filter(repo -> repo.getFork() == null || !repo.getFork()).toList();
+        repos = repos
+                .stream()
+                .filter(repo -> repo.getFork() == null || !repo.getFork())
+                .toList();
 
         //In GitHub, there is no API to get branches count in repository,
         //but we can init branch count from response in Link header

@@ -35,7 +35,11 @@ public class GitHubLookupController {
     public ResponseEntity<List<RepositoryDto>> getUser(@PathVariable(value = "user") String user) {
         List<RepositoryDto> result = cache.get(user);
         if (result == null) {
-            result = gitHubService.getRepositories(user).stream().map(DtoConverter::convert).toList();
+            result = gitHubService
+                    .getRepositories(user)
+                    .stream()
+                    .map(DtoConverter::convert)
+                    .toList();
             cache.set(user, result);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
