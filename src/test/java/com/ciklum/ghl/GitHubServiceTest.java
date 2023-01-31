@@ -1,7 +1,12 @@
 package com.ciklum.ghl;
 
 import com.ciklum.ghl.config.GitHubConfiguration;
-import com.ciklum.ghl.services.github.*;
+import com.ciklum.ghl.services.github.GitHubRepository;
+import com.ciklum.ghl.services.github.GitHubService;
+import com.ciklum.ghl.services.github.dto.GitHubBranch;
+import com.ciklum.ghl.services.github.dto.GitHubCommit;
+import com.ciklum.ghl.services.github.dto.GitHubOwner;
+import com.ciklum.ghl.services.github.dto.GitHubUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

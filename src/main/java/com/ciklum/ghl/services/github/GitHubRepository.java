@@ -1,5 +1,7 @@
 package com.ciklum.ghl.services.github;
 
+import com.ciklum.ghl.services.github.dto.GitHubBranch;
+import com.ciklum.ghl.services.github.dto.GitHubOwner;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

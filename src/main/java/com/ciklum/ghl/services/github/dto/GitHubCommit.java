@@ -1,13 +1,12 @@
-package com.ciklum.ghl.services.github;
+package com.ciklum.ghl.services.github.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GitHubBranch {
+public class GitHubCommit {
 
-    private String name;
+    private String sha;
 
-    private GitHubCommit commit;
 }

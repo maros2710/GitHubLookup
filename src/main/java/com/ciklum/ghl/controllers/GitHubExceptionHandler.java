@@ -1,20 +1,26 @@
 package com.ciklum.ghl.controllers;
 
 import com.ciklum.ghl.dto.Error;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
-public class GitHubExceptionHandler extends ResponseEntityExceptionHandler {
+public class GitHubExceptionHandler {
+
+    private static HttpHeaders overrideContentType() {
+        var httpHeaders = new HttpHeaders();
+        httpHeaders.set("Content-Type", "application/json");
+        return httpHeaders;
+    }
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Error> handleAllExceptions(Exception ex, WebRequest request) {
@@ -23,26 +29,21 @@ public class GitHubExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @Override
-    public ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
-            HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public ResponseEntity<Error> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex) {
         Error error =
                 new Error(HttpStatus.NOT_ACCEPTABLE.value(), "Only " + MediaType.APPLICATION_JSON + " is supported");
 
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(error);
-            return new ResponseEntity<>(json, HttpStatus.NOT_ACCEPTABLE);
-        } catch (Exception ignored) {
-
-        }
-
-       return new ResponseEntity<>(error, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(error, overrideContentType(), HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ResponseBody
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<Error> handleHttpClientException(HttpClientErrorException ex) {
+        if(ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+            return new ResponseEntity<>(new Error(HttpStatus.NOT_FOUND.value(), "User not found!"),
+                    HttpStatus.valueOf(HttpStatus.NOT_FOUND.value()));
+        }
+
         return new ResponseEntity<>(new Error(ex.getStatusCode().value(), ex.getMessage()),
                 HttpStatus.valueOf(ex.getStatusCode().value()));
     }
