@@ -1,7 +1,6 @@
 package com.ciklum.ghl.services.github;
 
 import com.ciklum.ghl.config.GitHubConfiguration;
-import com.ciklum.ghl.dto.RepositoryDto;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -15,7 +14,7 @@ import java.util.Map;
 @Service
 public class GitHubCache {
 
-    private final Map<String, List<RepositoryDto>> userCache;
+    private final Map<String, List<GitHubRepository>> userCache;
 
     private final Map<String, Long> timestampCache;
 
@@ -27,12 +26,12 @@ public class GitHubCache {
         this.gitHubConfiguration = gitHubConfiguration;
     }
 
-    public void set(String user, List<RepositoryDto> repositories) {
+    public void set(String user, List<GitHubRepository> repositories) {
         userCache.put(user, repositories);
         timestampCache.put(user, ZonedDateTime.now().toInstant().toEpochMilli());
     }
 
-    public List<RepositoryDto> get(String user) {
+    public List<GitHubRepository> get(String user) {
         Long lastTime = timestampCache.get(user);
         if (lastTime != null) {
             Long currentTime = ZonedDateTime.now().toInstant().toEpochMilli();

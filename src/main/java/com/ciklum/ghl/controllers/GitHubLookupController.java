@@ -2,7 +2,6 @@ package com.ciklum.ghl.controllers;
 
 import com.ciklum.ghl.dto.DtoConverter;
 import com.ciklum.ghl.dto.RepositoryDto;
-import com.ciklum.ghl.services.github.GitHubCache;
 import com.ciklum.ghl.services.github.GitHubService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,24 +18,17 @@ public class GitHubLookupController {
 
     private final GitHubService gitHubService;
 
-    private final GitHubCache cache;
-
-    public GitHubLookupController(GitHubService gitHubService, GitHubCache cache) {
+    public GitHubLookupController(GitHubService gitHubService) {
         this.gitHubService = gitHubService;
-        this.cache = cache;
     }
 
     @GetMapping(value = "/users/{user}")
     public ResponseEntity<List<RepositoryDto>> getUser(@PathVariable(value = "user") String user) {
-        List<RepositoryDto> result = cache.get(user);
-        if (result == null) {
-            result = gitHubService
-                    .getRepositories(user)
-                    .stream()
-                    .map(DtoConverter::convert)
-                    .toList();
-            cache.set(user, result);
-        }
+        List<RepositoryDto> result = gitHubService
+                .getRepositories(user)
+                .stream()
+                .map(DtoConverter::convert)
+                .toList();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

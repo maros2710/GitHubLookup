@@ -25,14 +25,24 @@ public class GitHubService {
 
     private final Executor executor;
 
-    public GitHubService(RestTemplate restTemplate, GitHubConfiguration configuration, @Qualifier("githubExecutor") Executor executor) {
+    private final GitHubCache cache;
+
+    public GitHubService(RestTemplate restTemplate, GitHubConfiguration configuration,
+                         @Qualifier("githubExecutor") Executor executor, GitHubCache cache) {
         this.restTemplate = restTemplate;
         this.executor = executor;
+        this.cache = cache;
         this.restTemplate.setInterceptors(List.of(new AuthorizationInterceptor(configuration.getToken())));
     }
 
     public List<GitHubRepository> getRepositories(String user) {
         log.info(String.format("Looking up for repositories for %s", user));
+
+        List<GitHubRepository> result = cache.get(user);
+        if (result != null) {
+            log.debug("Returning from cache");
+            return result;
+        }
 
         //First, we find GitHub user
         GitHubUser gitHubUser = findUser(user);
@@ -51,6 +61,8 @@ public class GitHubService {
 
         //Finally, we find branches for the user
         repos.forEach(it -> it.setBranches(getBranches(it)));
+
+        cache.set(user, repos);
 
         return repos;
     }
