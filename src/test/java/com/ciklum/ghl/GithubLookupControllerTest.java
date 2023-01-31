@@ -1,5 +1,6 @@
 package com.ciklum.ghl;
 
+import com.ciklum.ghl.controllers.GitHubLookupController;
 import com.ciklum.ghl.services.github.GitHubCache;
 import com.ciklum.ghl.services.github.GitHubService;
 import org.junit.jupiter.api.Test;
