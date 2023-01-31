@@ -55,8 +55,7 @@ public class GithubLookupControllerTest {
 
     @Test
     public void givenBadAcceptHeader_thenStatus406() throws Exception {
-        when(gitHubService.getRepositories(any())).thenThrow(
-                new HttpClientErrorException(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value())));
+        when(gitHubService.getRepositories(any())).thenReturn(new ArrayList<>());
         when(githubCache.get(any())).thenReturn(null);
 
         this.mockMvc.perform(get("/users/user_name").header("Accept", "application/xml"))

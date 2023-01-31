@@ -1,6 +1,5 @@
 package com.ciklum.ghl.controllers;
 
-import com.ciklum.ghl.dto.DtoConverter;
 import com.ciklum.ghl.dto.RepositoryDto;
 import com.ciklum.ghl.services.github.GitHubService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +23,7 @@ public class GitHubLookupController {
 
     @GetMapping(value = "/users/{user}")
     public ResponseEntity<List<RepositoryDto>> getUser(@PathVariable(value = "user") String user) {
-        List<RepositoryDto> result = gitHubService
-                .getRepositories(user)
-                .stream()
-                .map(DtoConverter::convert)
-                .toList();
+        List<RepositoryDto> result = gitHubService.getRepositories(user);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

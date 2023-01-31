@@ -1,5 +1,7 @@
 package com.ciklum.ghl.services.github;
 
+import com.ciklum.ghl.dto.DtoConverter;
+import com.ciklum.ghl.dto.RepositoryDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +20,16 @@ public class GitHubService {
         this.cache = cache;
     }
 
-    public List<GitHubRepository> getRepositories(String user) {
+    public List<RepositoryDto> getRepositories(String user) {
         log.info(String.format("Looking up for repositories for %s", user));
 
-        List<GitHubRepository> repositories = cache.get(user);
-        if (repositories != null) {
+        List<RepositoryDto> result = cache.get(user);
+        if (result != null) {
             log.debug("Returning from cache");
-            return repositories;
+            return result;
         }
 
-        repositories = client.getRepositories(user);
+        List<GitHubRepository> repositories = client.getRepositories(user);
 
         //filter out forked
         repositories = repositories
@@ -35,8 +37,12 @@ public class GitHubService {
                 .filter(repo -> repo.getFork() == null || !repo.getFork())
                 .toList();
 
-        cache.set(user, repositories);
+        result = repositories.stream()
+                             .map(DtoConverter::convert)
+                             .toList();
 
-        return repositories;
+        cache.set(user, result);
+
+        return result;
     }
 }
